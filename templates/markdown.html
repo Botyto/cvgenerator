@@ -1,2 +1,41 @@
 # {{ profile.name }}
-## {{ profile.title }}
+{{ profile.title }}
+
+## Contacts
+ - Email: [{{ profile.email }}](mailto:{{ profile.email }})
+ - Address: {{ profile.address }}
+ - Phone: {{ profile.phone }}
+ - Birthdate: {{ profile.birthdate }}
+
+## About
+{{ profile.about }}
+
+## Experience
+{% for experience in profile.experiences %}
+### {{ experience.position }} at {{ experience.workplace }}
+ - {{ experience.start_date }} - {{ experience.end_date }} ({{ experience.duration }})
+{% if experience.description %} - {{ experience.description }} {% end %}
+{% for project in experience.projects %}
+#### {{ project.name }}
+ - {{ project.start_date }} - {{ project.end_date }} ({{ project.duration }})
+{% if project.description %} - {{ project.description }} {% end %}
+{% end %}
+{% end %}
+
+## Education
+{% for education in profile.education %}
+### {{ education.degree }} in {{ education.field }} at {{ education.school }}
+ - {{ education.start_date }} - {{ education.end_date }} ({{ education.duration }})
+{% if education.description %} - {{ education.description }} {% end %}
+{% end %}
+
+## Skills
+{% for skill in profile.hard_skills %}
+ - {{ skill.name }}: {{ skill.level_dots(10) }} {% if skill.description %} - {{ skill.description }} {% end %}
+{% end %}
+
+## Side projects
+{% for project in profile.side_projects %}
+### {{ project.name }}
+- {{ project.description }}
+{% end %}
