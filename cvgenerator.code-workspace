@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Generate",
+				"type": "python",
+				"request": "launch",
+				"program": "generator.py",
+				"console": "integratedTerminal",
+				"justMyCode": false
+			}
+		],
+	},
+	"settings": {}
+}
