@@ -10,7 +10,7 @@
 ## About
 {{ profile.about }}
 
-## Experience
+## Professional Experience
 {% for experience in profile.experiences %}
 ### {{ experience.position }} at {{ experience.workplace }}
  - {{ experience.start_date }} - {{ experience.end_date }} ({{ experience.duration }})
@@ -34,7 +34,7 @@
  - {{ skill.name }}: {{ skill.level_dots(10) }} {% if skill.description %} - {{ skill.description }} {% end %}
 {% end %}
 
-## Side projects
+## Personal Projects
 {% for project in profile.side_projects %}
 ### {{ project.name }}
 - {{ project.description }}
