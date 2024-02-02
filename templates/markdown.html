@@ -6,6 +6,9 @@
  - Address: {{ profile.address }}
  - Phone: {{ profile.phone }}
  - Birthdate: {{ profile.birthdate }}
+{% for link in profile.links %}
+ - [{{ link.title }}]({{ link.url }})
+{% end %}
 
 ## About
 {{ profile.about }}
@@ -14,10 +17,16 @@
 {% for experience in profile.experiences %}
 ### {{ experience.position }} at {{ experience.workplace }}
  - {{ experience.start_date }} - {{ experience.end_date }} ({{ experience.duration }})
+{% for link in experience.links %}
+ - [{{ link.title }}]({{ link.url }})
+{% end %}
 {% if experience.description %} - {{ experience.description }} {% end %}
 {% for project in experience.projects %}
 #### {{ project.name }}
  - {{ project.start_date }} - {{ project.end_date }} ({{ project.duration }})
+{% for link in project.links %}
+ - [{{ link.title }}]({{ link.url }})
+{% end %}
 {% if project.description %} - {{ project.description }} {% end %}
 {% end %}
 {% end %}
@@ -26,6 +35,9 @@
 {% for education in profile.education %}
 ### {{ education.degree }} in {{ education.field }} at {{ education.school }}
  - {{ education.start_date }} - {{ education.end_date }} ({{ education.duration }})
+{% for link in education.links %}
+ - [{{ link.title }}]({{ link.url }})
+{% end %}
 {% if education.description %} - {{ education.description }} {% end %}
 {% end %}
 
@@ -38,4 +50,7 @@
 {% for project in profile.side_projects %}
 ### {{ project.name }}
 - {{ project.description }}
+{% for link in project.links %}
+ - [{{ link.title }}]({{ link.url }})
+{% end %}
 {% end %}

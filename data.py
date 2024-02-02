@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import IntEnum
+import os
 from typing import List
 
 
@@ -74,8 +75,9 @@ class WithDateRange:
 
 class LinkType(IntEnum):
     HOMEPAGE = 1
-    YOUTUBE = 2
-    GITHUB = 3
+    LINKEDIN = 2
+    YOUTUBE = 3
+    GITHUB = 4
 
 
 @dataclass
@@ -96,6 +98,18 @@ class Link:
     def homepage(cls, url: str, title: str = "Homepage"):
         return cls(url, title, LinkType.HOMEPAGE)
     
+    @classmethod
+    def linkedin(cls, url: str, title: str = "LinkedIn"):
+        return cls(url, title, LinkType.LINKEDIN)
+    
+    @property
+    def svg(self):
+        path = os.path.join("includes", self.type.name.lower() + ".svg")
+        if not os.path.exists(path):
+            return self.type.name.title()
+        with open(path, "rt", encoding="utf-8") as fh:
+            return fh.read()
+    
     def __lt__(self, other):
         return self.type.value < other.type.value
 
@@ -106,7 +120,7 @@ class Project(WithDateRange):
     end_datetime: datetime|None
     name: str
     description: str
-    links: List[Link]|None = None
+    links: List[Link]
 
 
 @dataclass
@@ -116,8 +130,8 @@ class Experience(WithDateRange):
     workplace: str
     position: str
     projects: List[Project]
-    description: str|None = None
-    links: List[Link]|None = None
+    description: str
+    links: List[Link]
 
 
 class EducationType(IntEnum):
@@ -132,9 +146,9 @@ class Education(WithDateRange):
     end_datetime: datetime|None
     school: str
     type: EducationType
-    field: str|None = None
-    description: str|None = None
-    links: List[Link]|None = None
+    field: str
+    description: str
+    links: List[Link]
 
     @property
     def degree(self):
@@ -145,7 +159,7 @@ class Education(WithDateRange):
 class HardSkill:
     name: str
     level: float
-    description: str|None = None
+    description: str
 
     def __lt__(self, other):
         return self.level > other.level
@@ -167,7 +181,7 @@ class HardSkill:
 class SideProject:
     name: str
     description: str
-    links: List[Link]|None = None
+    links: List[Link]
 
     def __lt__(self, other):
         return self.name < other.name
@@ -185,7 +199,8 @@ class Profile:
     email: str
     address: str
     birthdate: datetime
-    phone: str|None
+    phone: str
+    links: List[Link]
 
     about: str
     experiences: List[Experience]
