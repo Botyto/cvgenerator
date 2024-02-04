@@ -147,7 +147,7 @@ class SkillsSection(BaseSection):
 
 @dataclass
 class ProjectEntry(WithDatePeriod):
-    title: str
+    title: str|None = None
     link: Link|None = None
     description: str|None = None
     bullets: List[str]|None = None
@@ -161,7 +161,7 @@ class ProjectSection(BaseSection):
 
 @dataclass
 class Profile:
-    name: str
+    name: str|None = None
     title: str|None = None
     phone: str|None = None
     email: str|None = None
@@ -169,7 +169,7 @@ class Profile:
     location: str|None = None
     links: List[Link]|None = None
     photo_file: str|None = None
-    sections: List[BaseSection]|None
+    sections: List[BaseSection]|None = None
 
     @property
     def first_name(self):

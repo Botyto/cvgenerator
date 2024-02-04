@@ -52,7 +52,8 @@ class Config:
     
     @property
     def profile(self):
-        src_module = importlib.import_module(self.profile_path)
+        module_path = self.profile_path.replace(os.path.sep, ".")[:-3]
+        src_module = importlib.import_module(module_path)
         src_module = importlib.reload(src_module)
         return src_module.PROFILE
 
@@ -112,7 +113,7 @@ if __name__ == "__main__":
 
     if args.continuous:
         observer = watchdog.observers.Observer()
-        handler = GenerateHandler(args.src, args.template)
+        handler = GenerateHandler(config)
         observer.schedule(handler, ".", recursive=True)
         observer.start()
         try:
