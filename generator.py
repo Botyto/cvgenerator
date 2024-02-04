@@ -25,27 +25,6 @@ def data_to_dict(profile: model.Profile):
         return obj
     return _to_dict(profile)
 
-def generate(src: str, template: str, output: str = "output.html"):
-    src_module = importlib.import_module(src)
-    profile = src_module.PROFILE
-    santize_data(profile)
-    template_path = os.path.join("templates", template)
-    with open(template_path, "rt", encoding="utf-8") as fh:
-        template = tornado.template.Template(fh.read())
-    html = template.generate(profile=profile)
-    with open(output, "wb") as fh:
-        fh.write(html)
-    return output
-
-def generate_pdf(html_path: str, output: str = "output.pdf"):
-    with selenium.webdriver.Edge() as driver:
-        driver.get("file://" + os.path.abspath(html_path))
-        pdf = driver.print_page()
-    pdf_bytes = base64.b64decode(pdf)
-    with open(output, "wb") as fh:
-        fh.write(pdf_bytes)
-    return output
-
 
 @dataclass
 class Config:
