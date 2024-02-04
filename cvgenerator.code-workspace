@@ -14,6 +14,15 @@
 				"program": "generator.py",
 				"console": "integratedTerminal",
 				"justMyCode": false
+			},
+			{
+				"name": "Continouse generation",
+				"type": "python",
+				"request": "launch",
+				"program": "generator.py",
+				"console": "integratedTerminal",
+				"args": [ "--continuous" ],
+				"justMyCode": false
 			}
 		],
 	},
