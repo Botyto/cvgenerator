@@ -168,7 +168,7 @@ class Profile:
     birth_date: Date|None = None
     location: str|None = None
     links: List[Link]|None = None
-    photo_path: str|None = None
+    photo_file: str|None = None
     sections: List[BaseSection]|None
 
     @property
@@ -179,6 +179,10 @@ class Profile:
     def last_name(self):
         return " ".join(self.name.split(" ")[1:])
     
+    @property
+    def photo_path(self):
+        return os.path.join("input", self.photo_file)
+
     @property
     def photo_base64(self):
         assert self.photo_path.endswith(".png"), "Only PNG images are supported"
