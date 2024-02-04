@@ -1,0 +1,14 @@
+<section class="section">
+    <h3>{{ section.title }}</h3>
+    {% for group in section.groups %}
+        <ul class="skills">
+            {% for entry in group.entries %}
+                <li>
+                    {% if entry.name %}
+                        {{ entry.name }}
+                    {% end %}
+                </li>
+            {% end %}
+        </ul>
+    {% end %}
+</section>

@@ -6,12 +6,13 @@ import markdown
 import os
 import selenium
 import selenium.webdriver
+import sys
 import time
-import tornado.template
 import watchdog.observers
 import watchdog.events
 
 import model
+import template
 import test
 
 def data_to_dict(profile: model.Profile):
@@ -33,43 +34,54 @@ class Config:
     output_base_path: str
 
     @property
-    def template_mtime(self):
-        return os.path.getmtime(self.template_path)
+    def template_max_mtime(self):
+        max = None
+        for root, _, files in os.walk(self.template_path):
+            for file in files:
+                if file.endswith(".html"):
+                    mtime = os.path.getmtime(os.path.join(root, file))
+                    if max is None or mtime > max:
+                        max = mtime
+        return max
     
     @property
     def profile_mtime(self):
-        return os.path.getmtime(self.profile_path)
+        path = self.profile_path + ".py"
+        if not os.path.exists(path):
+            return 0
+        return os.path.getmtime(path)
     
     def output_path(self, ext: str):
+        os.makedirs(os.path.dirname(self.output_base_path), exist_ok=True)
         return self.output_base_path + ext
     
     def output_mtime(self, ext: str):
+        path = self.output_path(ext)
+        if not os.path.exists(path):
+            return 0
         return os.path.getmtime(self.output_path(ext))
     
     def needs_update(self, output_ext: str):
         output_mtime = self.output_mtime(output_ext)
-        return self.profile_mtime > output_mtime or self.template_mtime > output_mtime
+        return self.profile_mtime > output_mtime or self.template_max_mtime > output_mtime
     
     @property
     def profile(self):
-        module_path = self.profile_path.replace(os.path.sep, ".")[:-3]
+        module_path = self.profile_path.replace(os.path.sep, ".")
         src_module = importlib.import_module(module_path)
         src_module = importlib.reload(src_module)
         return src_module.PROFILE
 
     def generate_html(self):
-        with open(self.template_path, "rt", encoding="utf-8") as fh:
-            template = tornado.template.Template(fh.read())
-        html = template.generate(profile=self.profile)
-        html_path = self.output_path(".html")
-        if "markdown.html" in self.template_path:
-            with open(html_path, "rt", encoding="utf-8") as fh:
-                html = fh.read()
+        print("Generating HTML...")
+        html = template.generate(self.template_path, self.profile)
+        if "markdown" in self.template_path:
             html = markdown.markdown(html)
-        with open(html_path, "wt", encoding="utf-8") as fh:
+        with open(self.output_path(".html"), "wt", encoding="utf-8") as fh:
             fh.write(html)
 
     def generate_pdf(self):
+        print("Converting to PDF...")
         with selenium.webdriver.Edge() as driver:
             html_path = self.output_path(".html")
             driver.get("file://" + os.path.abspath(html_path))
@@ -89,6 +101,7 @@ class GenerateHandler(watchdog.events.FileSystemEventHandler):
         try:
             self.config.generate_html()
         except Exception as e:
+            info = sys.exc_info()[2]
             print("Failed to generate HTML:", e)
 
     def on_modified(self, event):
@@ -97,21 +110,21 @@ class GenerateHandler(watchdog.events.FileSystemEventHandler):
                 self.generate()
                 break
 
-
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
     args.add_argument("--profile", type=str, default="bisser")
-    args.add_argument("--template", type=str, default="markdown")
+    args.add_argument("--template", type=str, default="default")
     args.add_argument("--continuous", action="store_true")
     args = args.parse_args()
 
     config = Config(
-        template_path=os.path.join("templates", args.template + ".html"),
-        profile_path=os.path.join("input", args.profile + ".py"),
+        template_path=os.path.join("templates", args.template),
+        profile_path=os.path.join("input", args.profile),
         output_base_path=os.path.join("output", args.profile),
     )
 
     if args.continuous:
+        config.generate_html()
         observer = watchdog.observers.Observer()
         handler = GenerateHandler(config)
         observer.schedule(handler, ".", recursive=True)
@@ -123,10 +136,9 @@ if __name__ == "__main__":
             observer.stop()
         observer.join()
     elif config.needs_update(".html"):
-        print("Generating HTML...")
         config.generate_html()
-        print("Converting to PDF...")
         config.generate_pdf()
+        print("Testing...")
         test.test(config.output_path(".pdf"))
     else:
         print("No changes detected...")

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ profile.name }} CV</title>
+        <style>
+            @font-face{
+                font-family: FontName;
+                src: url(data:font/ttf;base64,QGZvbnQtZmFjZSB7CiAgZm9udC1mYW1pbHk6ICdMYXRvJzsKICBmb250LXN0eWxlOiBub3JtYWw7CiAgZm9udC13ZWlnaHQ6IDQwMDsKICBzcmM6IHVybChodHRwczovL2ZvbnRzLmdzdGF0aWMuY29tL3MvbGF0by92MjQvUzZ1eXc0Qk1VVFBIang0d1d3LnR0ZikgZm9ybWF0KCd0cnVldHlwZScpOwp9Cg==) format('truetype');
+            }
+            body {
+                margin: 0;
+                font-size: 1rem;
+                font-family: 'Lato', sans-serif;
+                color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            header h1 { font-weight: 500; text-transform: uppercase; font-size: 38px; }
+            header h2 { font-weight: 500; color: rgb(30, 144, 255); font-size: 19px; }
+            .details { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; }
+            .details span { display: flex; min-width: 33%; align-items: center; }
+            .details i { height: 12px; font-size: 12px; margin-right: 5px; }
+            svg { fill: rgb(30, 144, 255) !important; }
+            svg path { fill: rgb(30, 144, 255) !important; }
+            svg rect { fill: rgb(30, 144, 255) !important; }
+
+            .sections { display: grid; grid-auto-columns: 1fr 40%; grid-auto-flow: column; column-gap: 16px; }
+            .section h3 {
+                border-bottom: 3px solid black;
+                text-transform: uppercase;
+            }
+
+            .with-icon { display:flex; align-items: center; font-size: 12px; line-height: 15px; }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div>
+                <h1>{{ profile.name }}</h1>
+                <h2>{{ profile.title }}</h2>
+                <div>
+                    {% if profile.photo_file %}
+                        <img src="{{ profile.photo_base64 }}" alt="Profile photo" class="photo">
+                    {% end %}
+                    <section class="details">
+                        {% if profile.email %}
+                            <span>
+                                <i>{% module Svg("at.svg") %}</i>
+                                <b>{{ profile.email }}</b>
+                            </span>
+                        {% end %}
+                        {% if profile.phone %}
+                            <span>
+                                <i>{% module Svg("phone.svg") %}</i>
+                                <b>{{ profile.phone }}</b>
+                            </span>
+                        {% end %}
+                        {% if profile.location %}
+                            <span>
+                                <i>{% module Svg("location.svg") %}</i>
+                                <b>{{ profile.location }}</b>
+                            </span>
+                        {% end %}
+                        {% if profile.link %}
+                            <span>
+                                <i>{% module Svg("link.svg") %}</i>
+                                <a href="{{ profile.link.url }}">{{ profile.link.url }}</a>
+                            </span>
+                        {% end %}
+                    </section>
+                </div>
+            </div>
+        </header>
+        <div class="sections">
+            {% for column, sections in profile.sections_by_column %}
+                <div class="column">
+                    {% for section in sections %}
+                        {% module Template(section.TYPE + ".html", profile=profile, section=section) %}
+                    {% end %}
+                </div>
+            {% end %}
+        </div>
+    </body>
+</html>

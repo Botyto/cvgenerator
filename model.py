@@ -16,14 +16,16 @@ class Date:
 
     def __str__(self):
         if self.year and self.month:
-            return f"{self.month_name} {self.year}"
+            return f"{self.month:02d}/{self.year}"
         if self.year:
             return str(self.year)
-        return self.month_name
+        if self.month:
+            return self.month_name
+        return ""
 
     @property
     def month_name(self):
-        return datetime(2000, self.month, 1).strftime("%B") if self.month else ""
+        return datetime(2000, self.month, 1).strftime("%b") if self.month else ""
 
 
 @dataclass
@@ -31,7 +33,8 @@ class WithDatePeriod:
     start_date: Date|str|None = None
     end_date: Date|str|None = None
 
-    def __str__(self):
+    @property
+    def date_range(self):
         start_str = str(self.start_date) if self.start_date else None
         end_str = str(self.end_date) if self.end_date else None
         if start_str and end_str:
@@ -58,7 +61,7 @@ class Link:
             assert os.path.exists(path), "Fallback link icon not found"
         with open(path, "rt", encoding="utf-8") as fh:
             return fh.read()
-        
+
     @classmethod
     def linkedin(cls, url: str):
         return cls(url, "LinkedIn", "linkedin")
@@ -136,7 +139,7 @@ class SkillEntry:
 @dataclass
 class SkillsGroup:
     title: str|None = None
-    skills: List[SkillEntry]|None = None
+    entries: List[SkillEntry]|None = None
 
 
 @dataclass
@@ -165,9 +168,9 @@ class Profile:
     title: str|None = None
     phone: str|None = None
     email: str|None = None
-    birth_date: Date|None = None
+    birthdate: Date|None = None
     location: str|None = None
-    links: List[Link]|None = None
+    link: Link|None = None
     photo_file: str|None = None
     sections: List[BaseSection]|None = None
 
@@ -181,13 +184,16 @@ class Profile:
     
     @property
     def photo_path(self):
-        return os.path.join("input", self.photo_file)
+        if self.photo_file:
+            return os.path.join("input", self.photo_file)
 
     @property
     def photo_base64(self):
-        assert self.photo_path.endswith(".png"), "Only PNG images are supported"
-        with open(self.photo_path, "rb") as fh:
-            return "data:image/png;base64," + base64.b64encode(fh.read()).decode("utf-8")
+        path = self.photo_path
+        if path and os.path.exists(path):
+            assert path.endswith(".png"), "Only PNG images are supported"
+            with open(self.photo_path, "rb") as fh:
+                return "data:image/png;base64," + base64.b64encode(fh.read()).decode("utf-8")
     
     @property
     def sections_by_column(self):

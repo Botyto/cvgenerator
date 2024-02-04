@@ -1,0 +1,17 @@
+<section class="section">
+    <h3>{{ section.title }}</h3>
+    {% for entry in section.entries %}
+        <p>
+            {% if entry.text %}
+                {{ entry.text }}
+            {% end %}
+            {% if entry.bullets %}
+                <ul>
+                    {% for bullet in entry.bullets %}
+                        <li>{{ bullet }}</li>
+                    {% end %}
+                </ul>
+            {% end %}
+        </p>
+    {% end %}
+</section>
