@@ -7,10 +7,10 @@ import selenium
 import selenium.webdriver
 import tornado.template
 
-import data
+import model
 import test
 
-def santize_data(profile: data.Profile):
+def santize_data(profile: model.Profile):
     def _sanitize(obj):
         if isinstance(obj, list):
             copy = [*obj]
@@ -22,7 +22,7 @@ def santize_data(profile: data.Profile):
         return obj
     return _sanitize(profile)
 
-def data_to_dict(profile: data.Profile):
+def data_to_dict(profile: model.Profile):
     def _to_dict(obj):
         if isinstance(obj, list):
             copy = [*obj]
