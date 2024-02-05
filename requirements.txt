@@ -1,6 +1,8 @@
 tornado
 selenium
 markdown
+watchdog
 
 pypdf
 nltk
+spellchecker

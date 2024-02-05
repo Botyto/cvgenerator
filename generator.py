@@ -13,7 +13,6 @@ import watchdog.events
 
 import model
 import template
-import test
 
 def data_to_dict(profile: model.Profile):
     def _to_dict(obj):
@@ -139,6 +138,7 @@ if __name__ == "__main__":
         config.generate_html()
         config.generate_pdf()
         print("Testing...")
+        import test
         test.test(config.output_path(".pdf"))
     else:
         print("No changes detected...")
