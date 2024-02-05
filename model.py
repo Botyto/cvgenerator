@@ -166,6 +166,7 @@ class ProjectSection(BaseSection):
 class Profile:
     name: str|None = None
     title: str|None = None
+    accent_color: str = "black"
     phone: str|None = None
     email: str|None = None
     birthdate: Date|None = None
