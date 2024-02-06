@@ -3,23 +3,25 @@
     {% for entry in section.entries %}
         <article>
             {% if entry.title %}
-                <div>{{ entry.title }}</div>
+                <h4>{{ entry.title }}</h4>
             {% end %}
             {% if entry.company %}
-                <div>{{ entry.company }}</div>
+                <h5>{{ entry.company }}</h5>
             {% end %}
-            {% if entry.date_range %}
-                <div class="with-icon">
-                    <i class="icon-calendar"></i>
-                    {{ entry.date_range }}
-                </div>
-            {% end %}
-            {% if entry.location %}
-                <div class="with-icon">
-                    <i class="icon-location"></i>
-                    {{ entry.location }}
-                </div>
-            {% end %}
+            <div class="icon-stats">
+                {% if entry.date_range %}
+                    <div class="with-icon">
+                        <i class="icon-calendar"></i>
+                        {{ entry.date_range }}
+                    </div>
+                {% end %}
+                {% if entry.location %}
+                    <div class="with-icon">
+                        <i class="icon-location"></i>
+                        {{ entry.location }}
+                    </div>
+                {% end %}
+            </div>
             {% if entry.description %}
                 <div>{{ entry.description }}</div>
             {% end %}

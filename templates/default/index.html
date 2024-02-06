@@ -9,17 +9,31 @@
                 color-adjust: exact;
                 -webkit-print-color-adjust: exact;
             }
+            a { color: black; text-decoration: none; }
+            a:visited { color: black; }
             
-            header h1 { text-transform: uppercase; font-size: 38px; }
-            header h2 { color: {{ profile.accent_color }}; font-size: 19px; }
-            .details { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; }
-            .details span { display: flex; min-width: 33%; align-items: center; }
+            header { display: flex; flex-wrap: nowrap; justify-content: space-between; }
+            header h1 { text-transform: uppercase; margin: 0; font-size: 2.5em; color: {{ profile.base_color }}; }
+            header h2 { margin: 0; font-size: 1.5em; color: {{ profile.accent_color }}; }
+            .intro { width: 100%; display: flex; flex-direction: column; }
+            .details { display: flex; flex-wrap: wrap; font-size: 0.95em; }
+            .details .with-icon { display: flex; min-width: 33%; align-items: center; }
+            .details .with-icon span { font-weight: bold; }
+            header img { width: 8em; height: 8em; border-radius: 100%; }
 
-            .sections { display: grid; grid-auto-columns: 1fr 40%; grid-auto-flow: column; column-gap: 16px; }
+            .sections { display: flex; gap: 1em; }
             .section h3 {
-                border-bottom: 3px solid black;
+                margin: 0;
                 text-transform: uppercase;
+                border-bottom: 3px solid {{ profile.base_color }};
+                color: {{ profile.base_color }};
             }
+            .section p { margin: 0; }
+            .section ul { margin: 0; padding-left: 1em; }
+            .section .icon-stats { display: flex; gap: 1em; font-size: 0.9em; }
+
+            .jobs h4 { margin: 0; font-size: 1.3em; font-weight: normal; color: {{ profile.base_color }}; }
+            .jobs h5 { margin: 0; font-size: 1em; color: {{ profile.accent_color }}; }
 
             @font-face {
                 font-family: 'icons';
@@ -28,7 +42,6 @@
             i {
                 font-family: "icons";
                 font-style: normal;
-                margin-right: 5px;
                 color: {{ profile.accent_color }};
             }
             .icon-link:before { content: '\e800'; }
@@ -39,46 +52,45 @@
             .icon-home:before { content: '\e80f'; }
             .icon-at:before { content: '\f1fa'; }
 
-            .with-icon { display:flex; align-items: center; font-size: 12px; line-height: 15px; }
+            .with-icon { display: flex; align-items: center; }
+            .with-icon i { width: 1em; text-align: center; margin-right: 0.3em; }
         </style>
     </head>
     <body>
         <header>
-            <div>
+            <div class="intro">
                 <h1>{{ profile.name }}</h1>
                 <h2>{{ profile.title }}</h2>
-                <div>
-                    {% if profile.photo_file %}
-                        <img src="{{ profile.photo_base64 }}" alt="Profile photo" class="photo">
+                <section class="details">
+                    {% if profile.email %}
+                        <span class="with-icon">
+                            <i class="icon-at"></i>
+                            <span>{{ profile.email }}</span>
+                        </span>
                     {% end %}
-                    <section class="details">
-                        {% if profile.email %}
-                            <span>
-                                <i class="icon-at"></i>
-                                {{ profile.email }}
-                            </span>
-                        {% end %}
-                        {% if profile.phone %}
-                            <span>
-                                <i class="icon-phone"></i>
-                                {{ profile.phone }}
-                            </span>
-                        {% end %}
-                        {% if profile.location %}
-                            <span>
-                                <i class="icon-location"></i>
-                                {{ profile.location }}
-                            </span>
-                        {% end %}
-                        {% if profile.link %}
-                            <span>
-                                <i class="icon-link"></i>
-                                <a href="{{ profile.link.url }}">{{ profile.link.url }}</a>
-                            </span>
-                        {% end %}
-                    </section>
-                </div>
+                    {% if profile.phone %}
+                        <span class="with-icon">
+                            <i class="icon-phone"></i>
+                            <span>{{ profile.phone }}</span>
+                        </span>
+                    {% end %}
+                    {% if profile.location %}
+                        <span class="with-icon">
+                            <i class="icon-location"></i>
+                            <span>{{ profile.location }}</span>
+                        </span>
+                    {% end %}
+                    {% if profile.link %}
+                        <span class="with-icon">
+                            <i class="icon-link"></i>
+                            <span><a href="{{ profile.link.url }}">{{ profile.link.clean_url }}</a></span>
+                        </span>
+                    {% end %}
+                </section>
             </div>
+            {% if profile.photo_file %}
+                <img src="{{ profile.photo_base64 }}" alt="Profile photo" class="photo">
+            {% end %}
         </header>
         <div class="sections">
             {% for column, sections in profile.sections_by_column %}

@@ -5,18 +5,22 @@
             {% if entry.title %}
                 <div>{{ entry.title }}</div>
             {% end %}
-            {% if entry.link %}
-                <div class="with-icon">
-                    <i class="icon-link"></i>
-                    <a href="{{ entry.link.url }}">{{ entry.link.url }}</a>
-                </div>
-            {% end %}
-            {% if entry.date_range %}
-                <div class="with-icon">
-                    <i class="icon-calendar"></i>
-                    {{ entry.date_range }}
-                </div>
-            {% end %}
+            <div class="icon-stats">
+                {% if entry.date_range %}
+                    <div class="with-icon">
+                        <i class="icon-calendar"></i>
+                        {{ entry.date_range }}
+                    </div>
+                {% end %}
+            </div>
+            <div class="icon-stats">
+                {% if entry.link %}
+                    <div class="with-icon">
+                        <i class="icon-link"></i>
+                        <a href="{{ entry.link.url }}">{{ entry.link.clean_url }}</a>
+                    </div>
+                {% end %}
+            </div>
             {% if entry.description %}
                 <div>{{ entry.description }}</div>
             {% end %}

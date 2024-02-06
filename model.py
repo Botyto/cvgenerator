@@ -53,15 +53,14 @@ class Link:
     icon: str|None = None
 
     @property
-    def svg(self):
-        icon = self.icon or "link"
-        path = os.path.join("includes", icon.lower() + ".svg")
-        if not os.path.exists(path):
-            path = os.path.join("includes/link.svg")
-            assert os.path.exists(path), "Fallback link icon not found"
-        with open(path, "rt", encoding="utf-8") as fh:
-            return fh.read()
-
+    def clean_url(self):
+        obstructors = ["https://", "http://"]
+        url = self.url
+        for o in obstructors:
+            if url.startswith(o):
+                url = url[len(o):]
+        return url
+    
     @classmethod
     def linkedin(cls, url: str):
         return cls(url, "LinkedIn", "linkedin")
@@ -166,6 +165,7 @@ class ProjectSection(BaseSection):
 class Profile:
     name: str|None = None
     title: str|None = None
+    base_color: str = "black"
     accent_color: str = "black"
     phone: str|None = None
     email: str|None = None
