@@ -2,6 +2,7 @@ tornado
 selenium
 markdown
 watchdog
+pillow
 
 pypdf
 nltk

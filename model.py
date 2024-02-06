@@ -1,8 +1,10 @@
 import base64
 from dataclasses import dataclass
 from datetime import datetime
+import io
 import itertools
 import os
+import PIL.Image
 from typing import ClassVar, List
 
 
@@ -192,9 +194,14 @@ class Profile:
     def photo_base64(self):
         path = self.photo_path
         if path and os.path.exists(path):
-            assert path.endswith(".png"), "Only PNG images are supported"
             with open(self.photo_path, "rb") as fh:
-                return "data:image/png;base64," + base64.b64encode(fh.read()).decode("utf-8")
+                image = PIL.Image.open(fh)
+                image.thumbnail((200, 200))
+                image = image.convert("RGB")
+            buffer = io.BytesIO()
+            image.save(buffer, format="JPEG")
+            b64 = base64.b64encode(buffer.getvalue())
+            return "data:image/jpeg;base64," + b64.decode("utf-8")
     
     @property
     def sections_by_column(self):
