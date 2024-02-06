@@ -29,11 +29,18 @@
                 color: {{ profile.base_color }};
             }
             .section p { margin: 0; }
-            .section ul { margin: 0; padding-left: 1em; }
+            .section ul { margin: 0; padding-left: 0; list-style: none; }
+            .section ul li::before { content: '•'; margin-right: 0.5em; font-size: 0.6em; }
             .section .icon-stats { display: flex; gap: 1em; font-size: 0.9em; }
 
             .jobs h4 { margin: 0; font-size: 1.3em; font-weight: normal; color: {{ profile.base_color }}; }
             .jobs h5 { margin: 0; font-size: 1em; color: {{ profile.accent_color }}; }
+            ul.skills { display: flex; flex-flow: row wrap; gap: 0.5em; }
+            ul.skills li::before { display: none; }
+            ul.skills li { padding: 0.3em; border-bottom: solid 1px black; white-space: nowrap; }
+            article + article {
+                border-top: dashed 1px black;
+            }
 
             @font-face {
                 font-family: 'icons';
