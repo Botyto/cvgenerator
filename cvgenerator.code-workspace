@@ -16,7 +16,7 @@
 				"justMyCode": false
 			},
 			{
-				"name": "Continouse generation",
+				"name": "Continous generation",
 				"type": "python",
 				"request": "launch",
 				"program": "generator.py",

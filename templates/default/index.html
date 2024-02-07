@@ -96,6 +96,8 @@
 
             .with-icon { display: flex; align-items: center; }
             .with-icon i { width: 1em; text-align: center; margin-right: 0.3em; }
+
+            {{ profile.custom_css or "" }}
         </style>
     </head>
     <body>
@@ -107,7 +109,7 @@
                     {% if profile.email %}
                         <span class="with-icon">
                             <i class="icon-at"></i>
-                            <span>{{ profile.email }}</span>
+                            <span>{% module md(text=profile.email) %}</span>
                         </span>
                     {% end %}
                     {% if profile.phone %}
@@ -125,7 +127,7 @@
                     {% if profile.link %}
                         <span class="with-icon">
                             <i class="icon-link"></i>
-                            <span><a href="{{ profile.link.url }}">{{ profile.link.clean_url }}</a></span>
+                            <span>{% module md(text=profile.link.url) %}</span>
                         </span>
                     {% end %}
                 </section>

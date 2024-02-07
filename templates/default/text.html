@@ -3,12 +3,12 @@
     {% for entry in section.entries %}
         <p>
             {% if entry.text %}
-                {{ entry.text }}
+                {% module md(text=entry.text) %}
             {% end %}
             {% if entry.bullets %}
                 <ul>
                     {% for bullet in entry.bullets %}
-                        <li>{{ bullet }}</li>
+                        <li>{% module md(text=bullet) %}</li>
                     {% end %}
                 </ul>
             {% end %}

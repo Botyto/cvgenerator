@@ -28,7 +28,7 @@
             {% if entry.bullets %}
                 <ul>
                     {% for bullet in entry.bullets %}
-                        <li>{{ bullet }}</li>
+                        <li>{% module md(text=bullet) %}</li>
                     {% end %}
                 </ul>
             {% end %}

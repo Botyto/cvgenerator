@@ -28,9 +28,12 @@ def data_to_dict(profile: model.Profile):
 
 @dataclass
 class Config:
-    template_path: str
     profile_path: str
     output_base_path: str
+
+    @property
+    def template_path(self):
+        return os.path.join("templates", self.profile.template)
 
     @property
     def template_max_mtime(self):
@@ -65,7 +68,7 @@ class Config:
         return self.profile_mtime > output_mtime or self.template_max_mtime > output_mtime
     
     @property
-    def profile(self):
+    def profile(self) -> model.Profile:
         module_path = self.profile_path.replace(os.path.sep, ".")
         src_module = importlib.import_module(module_path)
         src_module = importlib.reload(src_module)
@@ -111,13 +114,11 @@ class GenerateHandler(watchdog.events.FileSystemEventHandler):
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
-    args.add_argument("--profile", type=str, default="monika")
-    args.add_argument("--template", type=str, default="default")
+    args.add_argument("--profile", type=str, default="bisser")
     args.add_argument("--continuous", action="store_true")
     args = args.parse_args()
 
     config = Config(
-        template_path=os.path.join("templates", args.template),
         profile_path=os.path.join("input", args.profile),
         output_base_path=os.path.join("output", args.profile),
     )

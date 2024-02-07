@@ -17,17 +17,17 @@
                 {% if entry.link %}
                     <div class="with-icon">
                         <i class="icon-link"></i>
-                        <a href="{{ entry.link.url }}">{{ entry.link.clean_url }}</a>
+                        {% module md(text=entry.link.url) %}
                     </div>
                 {% end %}
             </div>
             {% if entry.description %}
-                <div>{{ entry.description }}</div>
+                <div>{% module md(text=entry.description) %}</div>
             {% end %}
             {% if entry.bullets %}
                 <ul>
                     {% for bullet in entry.bullets %}
-                        <li>{{ bullet }}</li>
+                        <li>{% module md(text=bullet) %}</li>
                     {% end %}
                 </ul>
             {% end %}
