@@ -111,7 +111,7 @@ class GenerateHandler(watchdog.events.FileSystemEventHandler):
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
-    args.add_argument("--profile", type=str, default="bisser")
+    args.add_argument("--profile", type=str, default="monika")
     args.add_argument("--template", type=str, default="default")
     args.add_argument("--continuous", action="store_true")
     args = args.parse_args()
