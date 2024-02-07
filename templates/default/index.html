@@ -8,14 +8,18 @@
                 color-adjust: exact;
                 -webkit-print-color-adjust: exact;
             }
+            html { background-color: #777; }
             body {
+                background-color: white;
                 width: 19.73cm;
                 margin: 2em auto;
                 padding: 1.27cm;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
             }
             @media print {
+                html { background-color: initial; }
                 body {
+                    background-color: initial;
                     width: initial;
                     margin: 0;
                     padding: 0;
