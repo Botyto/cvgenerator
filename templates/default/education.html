@@ -3,10 +3,10 @@
     {% for entry in section.entries %}
         <article>
             {% if entry.field %}
-                <div>{{ entry.field }}</div>
+                <h4>{{ entry.field }}</h4>
             {% end %}
             {% if entry.school %}
-                <div>{{ entry.school }}</div>
+                <h5>{{ entry.school }}</h5>
             {% end %}
             <div class="icon-stats">
                 {% if entry.date_range %}

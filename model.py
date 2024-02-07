@@ -167,7 +167,7 @@ class ProjectSection(BaseSection):
 class Profile:
     name: str|None = None
     title: str|None = None
-    base_color: str = "black"
+    base_color: str = "#002B7F"
     accent_color: str = "black"
     phone: str|None = None
     email: str|None = None
