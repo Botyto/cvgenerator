@@ -6,6 +6,7 @@ import markdown
 import os
 import selenium
 import selenium.webdriver
+from selenium.webdriver.common.print_page_options import PrintOptions
 import sys
 import time
 import watchdog.observers
@@ -87,7 +88,17 @@ class Config:
         with selenium.webdriver.Edge() as driver:
             html_path = self.output_path(".html")
             driver.get("file://" + os.path.abspath(html_path))
-            pdf = driver.print_page()
+            options = PrintOptions()
+            options.orientation = "portrait"
+            # A4 in cm
+            options.page_width = 21.0
+            options.page_height = 29.7
+            # cm
+            options.margin_bottom = 1.27
+            options.margin_left = 1.27
+            options.margin_right = 1.27
+            options.margin_top = 1.27
+            pdf = driver.print_page(options)
         pdf_bytes = base64.b64decode(pdf)
         with open(self.output_path(".pdf"), "wb") as fh:
             fh.write(pdf_bytes)
