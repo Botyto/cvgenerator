@@ -11,7 +11,7 @@
             html { background-color: #777; }
             body {
                 background-color: white;
-                color: rgb(61, 58, 58);
+                color: {{ profile.text_color }};
                 width: 19.73cm;
                 margin: 2em auto;
                 padding: 1.27cm;
@@ -27,8 +27,8 @@
                     box-shadow: none;
                 }
             }
-            a { color: rgb(61, 58, 58); text-decoration: none; }
-            a:visited { color: rgb(61, 58, 58); }
+            a { color: {{ profile.text_color }}; text-decoration: none; }
+            a:visited { color: {{ profile.text_color }}; }
             
             header { display: flex; flex-wrap: nowrap; justify-content: space-between; }
             header h1 { text-transform: uppercase; margin: 0; font-size: 2.5em; color: {{ profile.base_color }}; }

@@ -137,7 +137,8 @@ class Profile:
     template: str = "default"
     custom_css: str|None = None
     base_color: str = "#002B7F"
-    accent_color: str = "black"
+    accent_color: str = "rgb(114,172,242)"
+    text_color: str = "rgb(61, 58, 58)"
     phone: str|None = None
     email: str|None = None
     birthdate: Date|None = None
