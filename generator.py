@@ -58,7 +58,8 @@ class Generator:
                     if mtime > template_max_mtime:
                         template_max_mtime = mtime
         profile_mtime = os.path.getmtime(f"input/{profile}.py")
-        output_mtime = os.path.getmtime(f"output/{profile}.html")
+        output_path = f"output/{profile}.html"
+        output_mtime = os.path.getmtime(output_path) if os.path.exists(output_path) else 0.0
         return profile_mtime > output_mtime or template_max_mtime > output_mtime
 
     def generate_html(self, profile: str|None):
