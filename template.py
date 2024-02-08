@@ -102,6 +102,7 @@ def generate(path: str, profile):
     namespace = {
         "profile": profile,
         "lato_base64": include_b64("Lato-Regular.ttf"),
+        "opensans_base64": include_b64("OpenSans-Regular.ttf"),
         "fontello_base64": include_b64("fontello.woff"),
     }
     handler.render("index.html", **namespace)
