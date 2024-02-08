@@ -95,10 +95,10 @@ class Generator:
             options.page_width = 21.0
             options.page_height = 29.7
             # cm
-            options.margin_bottom = 1.27
-            options.margin_left = 1.27
-            options.margin_right = 1.27
-            options.margin_top = 1.27
+            options.margin_bottom = 0.0
+            options.margin_left = 0.0
+            options.margin_right = 0.0
+            options.margin_top = 0.0
             pdf = driver.print_page(options)
         pdf_bytes = base64.b64decode(pdf)
         os.makedirs("output", exist_ok=True)
