@@ -1,3 +1,4 @@
+import base64
 import os
 import re
 import time
@@ -84,6 +85,13 @@ class MockTornadoRequest(tornado.httputil.HTTPServerRequest):
         self._start_time = time.time()
 
 
+def include_b64(path: str):
+    with open(os.path.join("includes", path), "rb") as fh:
+        raw = fh.read()
+        b64 = base64.b64encode(raw)
+        return b64.decode("utf-8")
+
+
 def generate(path: str, profile):
     tornado.web.RequestHandler._template_loaders.clear()
     handler = tornado.web.RequestHandler(
@@ -93,6 +101,8 @@ def generate(path: str, profile):
     handler._transforms = []
     namespace = {
         "profile": profile,
+        "lato_base64": include_b64("Lato-Regular.ttf"),
+        "fontello_base64": include_b64("fontello.woff"),
     }
     handler.render("index.html", **namespace)
     return handler.request.connection.content.decode("utf-8")

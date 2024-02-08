@@ -46,7 +46,7 @@ class Generator:
             self._profiles[profile] = (data, time.time())
         return data
 
-    def needs_update(self, profile: str|None):
+    def needs_update(self, profile: str|None = None):
         if profile is None:
             return any(self.needs_update(p) for p in self.all_profiles())
         profile_data = self.get_profile(profile)
@@ -62,7 +62,7 @@ class Generator:
         output_mtime = os.path.getmtime(output_path) if os.path.exists(output_path) else 0.0
         return profile_mtime > output_mtime or template_max_mtime > output_mtime
 
-    def generate_html(self, profile: str|None):
+    def generate_html(self, profile: str|None = None):
         if profile is None:
             for profile in self.all_profiles():
                 self.generate_html(profile)
@@ -75,11 +75,12 @@ class Generator:
         except Exception as e:
             print(f"[{profile}] Failed to generate HTML:", e)
             return
+        os.makedirs("output", exist_ok=True)
         output_path = f"output/{profile}.html"
         with open(output_path, "wt", encoding="utf-8") as fh:
             fh.write(html)
 
-    def generate_pdf(self, profile: str|None):
+    def generate_pdf(self, profile: str|None = None):
         if profile is None:
             for profile in self.all_profiles():
                 self.generate_pdf(profile)
@@ -100,6 +101,7 @@ class Generator:
             options.margin_top = 1.27
             pdf = driver.print_page(options)
         pdf_bytes = base64.b64decode(pdf)
+        os.makedirs("output", exist_ok=True)
         pdf_path = f"output/{profile}.pdf"
         with open(pdf_path, "wb") as fh:
             fh.write(pdf_bytes)
@@ -112,8 +114,8 @@ class GenerateHandler(watchdog.events.FileSystemEventHandler):
         self.gen = gen
 
     def on_modified(self, event):
-        if self.gen.needs_update(None):
-            self.gen.generate_html(None)
+        if self.gen.needs_update():
+            self.gen.generate_html()
 
 
 if __name__ == "__main__":
@@ -124,7 +126,7 @@ if __name__ == "__main__":
     gen = Generator()
 
     if args.continuous:
-        gen.generate_html(None)
+        gen.generate_html()
         observer = watchdog.observers.Observer()
         handler = GenerateHandler(gen)
         observer.schedule(handler, ".", recursive=True)
