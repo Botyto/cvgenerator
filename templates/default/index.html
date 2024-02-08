@@ -147,8 +147,8 @@
                     {% end %}
                 </section>
             </div>
-            {% if profile.photo_file %}
-                <img src="{{ profile.photo_base64 }}" alt="Profile photo" class="photo">
+            {% if profile.has_photo %}
+                <img src="{{ profile.photo_base64 }}" alt="{{ profile.name }}" class="photo">
             {% end %}
         </header>
         <div class="sections">

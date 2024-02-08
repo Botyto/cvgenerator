@@ -153,7 +153,12 @@ class Profile:
     @property
     def last_name(self):
         return " ".join(self.name.split(" ")[1:])
-    
+
+    @property
+    def has_photo(self):
+        path = self.photo_path
+        return path is not None and os.path.exists(path)
+
     @property
     def photo_path(self):
         if self.photo_file:
