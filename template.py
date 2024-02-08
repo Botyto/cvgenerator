@@ -21,10 +21,11 @@ class MarkdownModule(tornado.web.UIModule):
 
     def linkify(self, match: re.Match[str]):
         url = match.group(0)
-        href = url
         proto_end = url.find("://")
-        url = url[proto_end + 3:]
-        return f"<a href=\"{href}\">{url}</a>"
+        text = url[proto_end + 3:]
+        if text.endswith("/"):
+            text = text[:-1]
+        return f"<a href=\"{url}\">{text}</a>"
     
     def emailify(self, match: re.Match[str]):
         email = match.group(0)
