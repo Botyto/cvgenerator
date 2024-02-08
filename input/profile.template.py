@@ -7,7 +7,7 @@ PROFILE = Profile(
     phone="+123 456 7890",
     email="me@johndoe.com",
     location="City, Country",
-    link=Link.linkedin("https://www.linkedin.com/in/john-doe"),
+    link="https://www.linkedin.com/in/john-doe",
     photo_file="photo.png",
     sections=[
         TextSection("Summary",
@@ -25,7 +25,7 @@ PROFILE = Profile(
                     title="Professional Title",
                     company="Company Name",
                     location="City, Country",
-                    link=Link.homepage("https://www.company.site/"),
+                    link="https://www.company.site/",
                     description="Your job description",
                     bullets=[
                         "What you did",
