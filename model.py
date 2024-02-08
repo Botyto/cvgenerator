@@ -14,7 +14,6 @@ class Date:
 
     year: int|None = None
     month: int|None = None
-    # day: int|None = None
 
     def __str__(self):
         if self.year and self.month:
@@ -49,38 +48,6 @@ class WithDatePeriod:
 
 
 @dataclass
-class Link:
-    url: str
-    text: str|None = None
-    icon: str|None = None
-
-    @property
-    def clean_url(self):
-        obstructors = ["https://", "http://"]
-        url = self.url
-        for o in obstructors:
-            if url.startswith(o):
-                url = url[len(o):]
-        return url
-    
-    @classmethod
-    def linkedin(cls, url: str):
-        return cls(url, "LinkedIn", "linkedin")
-    
-    @classmethod
-    def github(cls, url: str):
-        return cls(url, "GitHub", "github")
-    
-    @classmethod
-    def youtube(cls, url: str):
-        return cls(url, "YouTube", "youtube")
-    
-    @classmethod
-    def homepage(cls, url: str):
-        return cls(url, "Homepage", "homepage")
-
-
-@dataclass
 class BaseSection:
     TYPE: ClassVar[str] = "none"
     title: str
@@ -104,7 +71,7 @@ class JobEntry(WithDatePeriod):
     title: str|None = None
     company: str|None = None
     location: str|None = None
-    link: Link|None = None
+    link: str|None = None
     description: str|None = None
     bullets: List[str]|None = None
 
@@ -152,7 +119,7 @@ class SkillsSection(BaseSection):
 @dataclass
 class ProjectEntry(WithDatePeriod):
     title: str|None = None
-    link: Link|None = None
+    link: str|None = None
     description: str|None = None
     bullets: List[str]|None = None
 
@@ -175,7 +142,7 @@ class Profile:
     email: str|None = None
     birthdate: Date|None = None
     location: str|None = None
-    link: Link|None = None
+    link: str|None = None
     photo_file: str|None = None
     sections: List[BaseSection]|None = None
 
