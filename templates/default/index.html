@@ -11,6 +11,7 @@
             html { background-color: #777; }
             body {
                 background-color: white;
+                color: rgb(61, 58, 58);
                 width: 19.73cm;
                 margin: 2em auto;
                 padding: 1.27cm;
@@ -26,8 +27,8 @@
                     box-shadow: none;
                 }
             }
-            a { color: black; text-decoration: none; }
-            a:visited { color: black; }
+            a { color: rgb(61, 58, 58); text-decoration: none; }
+            a:visited { color: rgb(61, 58, 58); }
             
             header { display: flex; flex-wrap: nowrap; justify-content: space-between; }
             header h1 { text-transform: uppercase; margin: 0; font-size: 2.5em; color: {{ profile.base_color }}; }
@@ -39,7 +40,6 @@
                 column-gap: 4em; 
             }
             .details span{
-                color: rgb(61, 58, 58);
                 font-size: 14px; 
             }
             .details .with-icon { display: flex; min-width: 33%; align-items: center; }
@@ -89,9 +89,7 @@
                 margin: 2px 0 2px 0; font-size: 1em; color: {{ profile.accent_color }};
             }
             article .with-icon, article .with-icon a, .section > p, article > div, ul {
-               color: rgb(61, 58, 58);
                font-size: 14px;
-               font-weight: 300;
             }
 
             @font-face {
@@ -132,19 +130,19 @@
                     {% if profile.phone %}
                         <span class="with-icon">
                             <i class="icon-phone"></i>
-                            <span>{{ profile.phone }}</span>
+                            <span>{% module md(text=profile.phone) %}</span>
                         </span>
                     {% end %}
                     {% if profile.location %}
                         <span class="with-icon">
                             <i class="icon-location"></i>
-                            <span>{{ profile.location }}</span>
+                            <span>{% module md(text=profile.location) %}</span>
                         </span>
                     {% end %}
                     {% if profile.link %}
                         <span class="with-icon">
                             <i class="icon-link"></i>
-                            <span>{% module md(text=profile.link.url) %}</span>
+                            <span>{% module md(text=profile.link) %}</span>
                         </span>
                     {% end %}
                 </section>

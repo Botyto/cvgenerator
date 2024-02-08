@@ -5,22 +5,24 @@
             {% if entry.title %}
                 <h3>{{ entry.title }}</h3>
             {% end %}
-            <div class="icon-stats">
-                {% if entry.date_range %}
+
+            {% if entry.date_range %}
+                <div class="icon-stats">
                     <div class="with-icon">
                         <i class="icon-calendar"></i>
                         {{ entry.date_range }}
                     </div>
-                {% end %}
-            </div>
-            <div class="icon-stats">
-                {% if entry.link %}
+                </div>
+            {% end %}
+            {% if entry.link %}
+                <div class="icon-stats">
                     <div class="with-icon">
                         <i class="icon-link"></i>
-                        {% module md(text=entry.link.url) %}
+                        {% module md(text=entry.link) %}
                     </div>
-                {% end %}
-            </div>
+                </div>
+            {% end %}
+
             {% if entry.description %}
                 <div>{% module md(text=entry.description) %}</div>
             {% end %}
