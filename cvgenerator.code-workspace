@@ -23,7 +23,16 @@
 				"console": "integratedTerminal",
 				"args": [ "--continuous" ],
 				"justMyCode": false
-			}
+			},
+			{
+				"name": "Test",
+				"type": "python",
+				"request": "launch",
+				"program": "generator.py",
+				"console": "integratedTerminal",
+				"args": [ "--test" ],
+				"justMyCode": false
+			},
 		],
 	},
 	"settings": {}

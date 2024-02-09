@@ -13,17 +13,6 @@ import watchdog.events
 import model
 import template
 
-def data_to_dict(profile: model.Profile):
-    def _to_dict(obj):
-        if isinstance(obj, list):
-            copy = [*obj]
-            copy.sort()
-            return [_to_dict(x) for x in copy]
-        if hasattr(obj, "__annotations__"):
-            return {k: _to_dict(v) for k, v in obj.__dict__.items()}
-        return obj
-    return _to_dict(profile)
-
 
 class Generator:
     _profiles: Dict[str, Tuple[model.Profile, float]]
@@ -122,6 +111,7 @@ class GenerateHandler(watchdog.events.FileSystemEventHandler):
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
     args.add_argument("--continuous", action="store_true")
+    args.add_argument("--test", action="store_true")
     args = args.parse_args()
 
     gen = Generator()
@@ -138,9 +128,14 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             observer.stop()
         observer.join()
-    elif gen.needs_update():
-        gen.generate_html()
-        gen.generate_pdf()
     else:
-        print("No changes detected...")
+        if gen.needs_update():
+            gen.generate_html()
+            gen.generate_pdf()
+        else:
+            print("No changes detected...")
+        if args.test:
+            import test
+            for profile in gen.all_profiles():
+                test.run_all(profile)
     print("Done.")

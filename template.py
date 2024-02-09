@@ -32,7 +32,7 @@ class MarkdownModule(tornado.web.UIModule):
         email = match.group(0)
         return f"<a href=\"mailto:{email}\">{email}</a>"
     
-    def shirnk_whitespace(self, match: re.Match[str]):
+    def shrink_whitespace(self, match: re.Match[str]):
         return " "
 
     def render(self, text: str, **kwargs):
@@ -41,7 +41,7 @@ class MarkdownModule(tornado.web.UIModule):
         text = self.BOLD_RE.sub(r"<strong>\1</strong>", text)
         text = self.ITALIC_RE.sub(r"<em>\1</em>", text)
         text = self.UNDERLINE_RE.sub(r"<u>\1</u>", text)
-        text = self.WHITESPACE_RE.sub(self.shirnk_whitespace, text)
+        text = self.WHITESPACE_RE.sub(self.shrink_whitespace, text)
         return text
 
 
