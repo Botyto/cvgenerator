@@ -139,7 +139,9 @@ class Profile:
     base_color: str = "rgb(0, 43, 127)"
     accent_color: str = "rgb(86, 172, 242)"
     text_color: str = "rgb(61, 58, 58)"
-    background_color: str = "rgb(255, 255, 255)"
+    page_color: str = "rgb(255, 255, 255)"
+    background_color: str = "rgb(119, 119, 119)"
+    page_image: str|None = None
     phone: str|None = None
     email: str|None = None
     birthdate: Date|None = None

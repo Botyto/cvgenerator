@@ -6,10 +6,10 @@ import tornado.web
 import tornado.template
 
 
-class SvgModule(tornado.web.UIModule):
+class B64Module(tornado.web.UIModule):
     def render(self, path: str, **kwargs):
         with open(os.path.join("includes", path), "rb") as fh:
-            return fh.read()
+            return base64.b64encode(fh.read()).decode("utf-8")
 
 
 class MarkdownModule(tornado.web.UIModule):
@@ -67,7 +67,7 @@ class MockTornadoApplication(tornado.web.Application):
         }
         self.ui_modules = {
             "Template": tornado.web.TemplateModule,
-            "Svg": SvgModule,
+            "b64": B64Module,
             "md": MarkdownModule,
         }
 
@@ -112,9 +112,6 @@ def generate(path: str, profile):
     handler._transforms = []
     namespace = {
         "profile": profile,
-        "lato_base64": include_b64("Lato-Regular.ttf"),
-        "opensans_base64": include_b64("OpenSans-Regular.ttf"),
-        "fontello_base64": include_b64("fontello.woff"),
     }
     handler.render("index.html", **namespace)
     return handler.request.connection.content.decode("utf-8")
