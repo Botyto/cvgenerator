@@ -13,8 +13,9 @@ class SvgModule(tornado.web.UIModule):
 
 
 class MarkdownModule(tornado.web.UIModule):
-    URL_RE = re.compile(r"https?://[^\s]+")
+    URL_RE = re.compile(r"(https?://|www.)[^\s]+")
     EMAIL_RE = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
+    PHONE_RE = re.compile(r"\+?\s*(?:\d\s*){10,}")
     BOLD_RE = re.compile(r"\*\*([^\*]+)\*\*")
     ITALIC_RE = re.compile(r"\*([^\*]+)\*")
     UNDERLINE_RE = re.compile(r"__([^\_]+)__")
@@ -23,7 +24,11 @@ class MarkdownModule(tornado.web.UIModule):
     def linkify(self, match: re.Match[str]):
         url = match.group(0)
         proto_end = url.find("://")
-        text = url[proto_end + 3:]
+        if proto_end != -1:
+            text = url[proto_end + 3:]
+        else:
+            text = url
+            url = "https://" + url
         if text.endswith("/"):
             text = text[:-1]
         return f"<a href=\"{url}\">{text}</a>"
@@ -32,12 +37,18 @@ class MarkdownModule(tornado.web.UIModule):
         email = match.group(0)
         return f"<a href=\"mailto:{email}\">{email}</a>"
     
+    def phonify(self, match: re.Match[str]):
+        phone_text = match.group(0)
+        phone_num = phone_text.replace(" ", "")
+        return f"<a href=\"tel:{phone_num}\">{phone_text}</a>"
+
     def shrink_whitespace(self, match: re.Match[str]):
         return " "
 
     def render(self, text: str, **kwargs):
         text = self.URL_RE.sub(self.linkify, text)
         text = self.EMAIL_RE.sub(self.emailify, text)
+        text = self.PHONE_RE.sub(self.phonify, text)
         text = self.BOLD_RE.sub(r"<strong>\1</strong>", text)
         text = self.ITALIC_RE.sub(r"<em>\1</em>", text)
         text = self.UNDERLINE_RE.sub(r"<u>\1</u>", text)
