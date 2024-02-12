@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link rel="icon" type="image/png" href="data:image/png;base64,{% module b64(path="favicon.png") %}" />
         <title>{{ profile.name }} CV</title>
         <style>
             @font-face {
@@ -162,6 +163,7 @@
             i {
                 font-family: "icons";
                 font-style: normal;
+                user-select: none;
                 color: {{ profile.accent_color }};
             }
             .icon-link:before { content: '\e800'; }
