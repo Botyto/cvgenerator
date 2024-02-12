@@ -15,6 +15,7 @@
                 src: url(data:font/ttf;base64,{{ opensans_base64 }}) format("truetype");
             }
             body {
+                background-color: {{ profile.background_color }};
                 padding: 60px;
                 font-family: "OpenSans", sans-serif;
                 color-adjust: exact;
@@ -25,7 +26,6 @@
             @media not print {
                 html { background-color: #777; }
                 body {
-                    background-color: white;
                     width: calc(940px - 2*60px);
                     height: calc(1330px - 2*60px);
                     margin: 30px auto;
@@ -143,7 +143,7 @@
                 font-size: 14px;
                 line-height: 19px;
                 padding: 5px 8px;
-                border-bottom: solid 1px black;
+                border-bottom: solid 1px {{ profile.text_color }};
                 font-weight: bold;
             }
             article + article {
