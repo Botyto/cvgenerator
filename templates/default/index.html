@@ -16,7 +16,7 @@
                 src: url(data:font/ttf;base64,{% module b64(path="OpenSans-Regular.ttf") %}) format("truetype");
             }
             body {
-                padding: 60px;
+                padding: 60px 60px 0;
                 font-family: "OpenSans", sans-serif;
                 color-adjust: exact;
                 -webkit-print-color-adjust: exact;
@@ -32,8 +32,8 @@
             @media not print {
                 html { background-color: {{ profile.background_color }}; }
                 body {
-                    width: calc(940px - 2*60px);
-                    height: calc(1330px - 2*60px);
+                    max-width: calc(940px - 2*60px);
+                    min-height: calc(1330px - 2*60px);
                     margin: 30px auto;
                     box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
                 }
@@ -72,7 +72,6 @@
                 color: {{ profile.accent_color }};
             }
             .intro {
-                width: 100%;
                 display: flex;
                 flex-direction: column;
                 padding-right: 12px;
@@ -84,7 +83,7 @@
                 line-height: 16px;
                 row-gap: 2px;
             }
-            .details .with-icon { display: flex; min-width: 50%; align-items: center; }
+            .details .with-icon { min-width: 50%; white-space: nowrap; }
             .details .with-icon i { margin-right: 4px; }
             .details .with-icon span { font-weight: bold; padding-right: 14px; }
             header img { width: 135px; height: 135px; border-radius: 50%; }
@@ -92,10 +91,18 @@
             .sections {
                 display: flex;
                 column-gap: 32px;
-                flex-direction: row;
+                flex-flow: row wrap;
             }
-            .sections .column:first-child { width: 60%; }
+            .sections .column:first-child { width: calc(60% - 32px); }
             .sections .column:nth-child(2) { width: 40%; }
+            @media screen and (max-width: 940px), screen and (orientation: portrait) {
+                html { background-color: none; }
+                body { margin: 0 auto; padding: 30px; }
+                header { flex-flow: row wrap; }
+                .sections { flex-flow: column; }
+                .sections .column:first-child { width: initial; }
+                .sections .column:nth-child(2) { width: initial; }
+            }
             .section {
                 padding: 4px 0px 0;
                 margin-bottom: 8px;
@@ -174,7 +181,7 @@
             .icon-home:before { content: '\e80f'; }
             .icon-at:before { content: '\f1fa'; }
 
-            .with-icon { display: flex; align-items: center; flex-wrap: nowrap; flex-flow: row wrap; }
+            .with-icon { display: flex; align-items: center; flex-wrap: nowrap; }
             .with-icon i { width: 12px; text-align: center; margin-right: 4px; }
 
             {{ profile.custom_css or "" }}
