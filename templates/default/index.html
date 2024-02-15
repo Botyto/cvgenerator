@@ -118,7 +118,7 @@
                 border-bottom: 3px solid {{ profile.base_color }};
                 color: {{ profile.base_color }};
             }
-            .section p, .section article, .section ul { margin: 0; padding: 4px 0; }
+            .section > p, .section article, .section ul { margin: 0; padding: 4px 0; }
             article {
                 display: flex;
                 flex-direction: column;
@@ -156,12 +156,15 @@
                 font-size: 14px;
                 line-height: 19px;
                 padding: 5px 8px;
-                border-bottom: solid 1px {{ profile.text_color }};
                 font-weight: bold;
+                border-bottom: solid 1px {{ profile.text_color }};
             }
             article + article {
                 border-top: dashed 1px rgba(0, 0, 0, 0.248);
             }
+            article p { margin: 0; padding: 0; }
+            article p a { text-decoration: underline; }
+            article ul a { text-decoration: underline; }
 
             @font-face {
                 font-family: 'icons';

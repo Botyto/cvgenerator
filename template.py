@@ -4,6 +4,7 @@ import re
 import time
 import tornado.web
 import tornado.template
+from typing import Callable, List, Tuple
 
 
 class B64Module(tornado.web.UIModule):
@@ -13,15 +14,23 @@ class B64Module(tornado.web.UIModule):
 
 
 class MarkdownModule(tornado.web.UIModule):
+    MDLINK_RE = re.compile(r"\[([^\]]+)\]\(([^\)]+)\)")
+    MDBOLD_RE = re.compile(r"\*\*([^\*]+)\*\*")
+    MDITALIC_RE = re.compile(r"\*([^\*]+)\*")
+    MDUNDERLINE_RE = re.compile(r"__([^\_]+)__")
     URL_RE = re.compile(r"(https?://|www.)[^\s]+")
     EMAIL_RE = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
     PHONE_RE = re.compile(r"\+?\s*(?:\d\s*){10,}")
-    BOLD_RE = re.compile(r"\*\*([^\*]+)\*\*")
-    ITALIC_RE = re.compile(r"\*([^\*]+)\*")
-    UNDERLINE_RE = re.compile(r"__([^\_]+)__")
     WHITESPACE_RE = re.compile(r"[\n\s]+")
 
-    def linkify(self, match: re.Match[str]):
+    @staticmethod
+    def mdlinkify(match: re.Match[str]):
+        text = match.group(1)
+        url = match.group(2)
+        return f"<a href=\"{url}\" target=\"_blank\">{text}</a>"
+
+    @staticmethod
+    def linkify(match: re.Match[str]):
         url = match.group(0)
         proto_end = url.find("://")
         if proto_end != -1:
@@ -31,29 +40,51 @@ class MarkdownModule(tornado.web.UIModule):
             url = "https://" + url
         if text.endswith("/"):
             text = text[:-1]
-        return f"<a href=\"{url}\">{text}</a>"
+        return f"<a href=\"{url}\" target=\"_blank\">{text}</a>"
     
-    def emailify(self, match: re.Match[str]):
+    @staticmethod
+    def emailify(match: re.Match[str]):
         email = match.group(0)
         return f"<a href=\"mailto:{email}\">{email}</a>"
     
-    def phonify(self, match: re.Match[str]):
+    @staticmethod
+    def phonify(match: re.Match[str]):
         phone_text = match.group(0)
         phone_num = phone_text.replace(" ", "")
         return f"<a href=\"tel:{phone_num}\">{phone_text}</a>"
 
-    def shrink_whitespace(self, match: re.Match[str]):
+    @staticmethod
+    def shrink_whitespace(match: re.Match[str]):
         return " "
 
+    TRANSFORMERS: List[Tuple[re.Pattern, str|Callable[[re.Match[str]], str]]] = [
+        (MDLINK_RE, mdlinkify),
+        (MDBOLD_RE, r"<strong>\1</strong>"),
+        (MDITALIC_RE, r"<em>\1</em>"),
+        (MDUNDERLINE_RE, r"<u>\1</u>"),
+        (URL_RE, linkify),
+        (EMAIL_RE, emailify),
+        (PHONE_RE, phonify),
+        (WHITESPACE_RE, shrink_whitespace),
+    ]
+
     def render(self, text: str, **kwargs):
-        text = self.URL_RE.sub(self.linkify, text)
-        text = self.EMAIL_RE.sub(self.emailify, text)
-        text = self.PHONE_RE.sub(self.phonify, text)
-        text = self.BOLD_RE.sub(r"<strong>\1</strong>", text)
-        text = self.ITALIC_RE.sub(r"<em>\1</em>", text)
-        text = self.UNDERLINE_RE.sub(r"<u>\1</u>", text)
-        text = self.WHITESPACE_RE.sub(self.shrink_whitespace, text)
-        return text
+        result = []
+        while text:
+            for pattern, repl in self.TRANSFORMERS:
+                match = pattern.search(text)
+                if match:
+                    result.append(text[:match.start()])
+                    if isinstance(repl, str):
+                        result.append(pattern.sub(repl, text, 1))
+                    else:
+                        result.append(repl(match))
+                    text = text[match.end():]
+                    break
+            else:
+                result.append(text)
+                text = ""
+        return "".join(result)
 
 
 class MockTornadoApplication(tornado.web.Application):
