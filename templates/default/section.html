@@ -1,0 +1,59 @@
+<style>
+.section {
+    padding: 4px 0px 0;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 18px;
+}
+.section > h3 {
+    font-family: "Lato", sans-serif;
+    font-size: 22px;
+    line-height: 26px;
+    margin: 0 0 4px;
+    text-transform: uppercase;
+    border-bottom: 3px solid {{ profile.base_color }};
+    color: {{ profile.base_color }};
+}
+.section > p, .section article, .section ul { margin: 0; padding: 4px 0; }
+article {
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+}
+article h3 {
+    font-family: "Lato", sans-serif;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: normal;
+    margin: 0;
+    color: {{ profile.base_color }};
+}
+article h5 {
+    margin: 0;
+    font-size: 14px;
+    line-height: 19px;
+    font-weight: bold;
+    color: {{ profile.accent_color }};
+}
+.section ul { padding: 0 0 0 5px; list-style: none; }
+.section ul li { padding-left: 10px; }
+.section ul li::marker { content: '•'; }
+
+article + article {
+    border-top: dashed 1px rgba(0, 0, 0, 0.248);
+}
+article p { margin: 0; padding: 0; }
+article p a { text-decoration: underline; }
+article ul a { text-decoration: underline; }
+</style>
+
+<section class="section">
+    {% if section.title %}
+        <h3>{{ section.title }}</h3>
+    {% end %}
+    {% for entry in section.entries %}
+        <article class="{{ entry.TYPE }}">
+            {% module Template(entry.TYPE + ".html", profile=profile, entry=entry) %}
+        </article>
+    {% end %}
+</section>

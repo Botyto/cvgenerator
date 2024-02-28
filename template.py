@@ -1,4 +1,5 @@
 import base64
+import math
 import os
 import re
 import time
@@ -87,6 +88,23 @@ class MarkdownModule(tornado.web.UIModule):
         return "".join(result)
 
 
+
+class StylizedTemplateModule(tornado.web.TemplateModule):
+    NEWLINES_RE = re.compile(rb"[\n]+")
+    def render(self, path: str, **kwargs) -> bytes:
+        result = super().render(path, math=math, **kwargs)
+        if result.startswith(b"<style>"):
+            css_end = result.find(b"</style>")
+            css = result[7:css_end]
+            result = result[css_end + 8:]
+            if path not in self._resource_dict:
+                resource = {"embedded_css": css.decode("utf-8")}
+                self._resource_list.append(resource)
+                self._resource_dict[path] = resource
+        result = self.NEWLINES_RE.sub(b"\n", result)
+        return result
+
+
 class MockTornadoApplication(tornado.web.Application):
     def __init__(self, path: str):
         self.ui_methods = {}
@@ -97,7 +115,7 @@ class MockTornadoApplication(tornado.web.Application):
             "debug": True,
         }
         self.ui_modules = {
-            "Template": tornado.web.TemplateModule,
+            "Template": StylizedTemplateModule,
             "b64": B64Module,
             "md": MarkdownModule,
         }

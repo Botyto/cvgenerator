@@ -1,0 +1,96 @@
+<style>
+.pie_chart {
+    display: flex;
+    flex-direction: row;
+    column-gap: 16px;
+}
+.pie_chart ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    justify-content: center;
+}
+.pie_chart ul li::marker {
+    content: "";
+}
+.pie_chart ul li {
+    padding: 0;
+}
+.pie_chart ul li span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    line-height: 20px;
+    border-radius: 50%;
+    color: #fff;
+    text-align: center;
+    background-color: {{ profile.base_color }};
+}
+</style>
+
+{% set r = 72 %}
+{% set w = 34 %}
+
+<svg width="200" height="200" viewBox="0 0 200 200">
+    <g>
+        {% for i, value in enumerate(entry.values) %}
+            {% set angles = entry.angles(i) %}
+            <path
+                stroke-width="35"
+                stroke="{{ entry.lerp_color('rgb(255, 255, 255)', profile.accent_color, i) }}"
+                fill="none"
+                d="
+                M {{ 100+math.sin(angles[0])*(r-w/2) }} {{ 100-math.cos(angles[0])*(r-w/2) }}
+                A {{(r-w/2)}} {{(r-w/2)}} 0 0 1 {{ 100+math.sin(angles[1])*(r-w/2) }} {{ 100-math.cos(angles[1])*(r-w/2) }}
+                "
+            ></path>
+            <line
+                stroke-width="2"
+                stroke="{{ profile.base_color }}"
+                x1="{{ 100+math.sin((angles[0] + angles[1])/2)*(r-w/2) }}"
+                y1="{{ 100-math.cos((angles[0] + angles[1])/2)*(r-w/2) }}"
+                x2="{{ 100+math.sin((angles[0] + angles[1])/2)*(r+w/2) }}"
+                y2="{{ 100-math.cos((angles[0] + angles[1])/2)*(r+w/2) }}"
+            ></line>
+            <circle
+                fill="{{ profile.base_color }}"
+                r="10"
+                cx="{{ 100+math.sin((angles[0] + angles[1])/2)*(r+w/2) }}"
+                cy="{{ 100-math.cos((angles[0] + angles[1])/2)*(r+w/2) }}"
+            ></circle>
+            <text
+                fill="#fff"
+                font-size="12px"
+                x="{{ 100+math.sin((angles[0] + angles[1])/2)*(r+w/2) - 4 }}"
+                y="{{ 100-math.cos((angles[0] + angles[1])/2)*(r+w/2) + 4 }}"
+            >
+                {{ chr(ord('A') + i) }}
+            </text>
+        {% end %}
+    </g>
+    <g>
+        {% for i, value in enumerate(entry.values) %}
+            {% set angles = entry.angles(i) %}
+            <line
+                stroke-width="4"
+                stroke="#fff"
+                x1="{{ 100+math.sin(angles[0])*(r-w) }}"
+                y1="{{ 100-math.cos(angles[0])*(r-w) }}"
+                x2="{{ 100+math.sin(angles[0])*r }}"
+                y2="{{ 100-math.cos(angles[0])*r }}"
+            ></line>
+        {% end %}
+    </g>
+</svg>
+
+<ul>
+    {% for i, value in enumerate(entry.values) %}
+        <li>
+            <span>{{ chr(ord('A') + i) }}</span>
+            {{ value.name }}
+        </li>
+    {% end %}
+</ul>

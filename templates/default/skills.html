@@ -1,18 +1,23 @@
-<section class="section">
-    <h3>{{ section.title }}</h3>
-    {% for group in section.groups %}
-        <ul class="skills">
-            {% if group.title %}
-                <h3>{{ group.title }}</h3>
-            {% end %}
-            
-            {% for entry in group.entries %}
-                <li>
-                    {% if entry.name %}
-                        {{ entry.name }}
-                    {% end %}
-                </li>
-            {% end %}
-        </ul>
+<style>
+.skills ul { display: flex; padding-left: 0; flex-flow: row wrap; column-gap: 10px; }
+.skills ul li::marker { content: none; }
+.skills ul li {
+    font-size: 14px;
+    line-height: 19px;
+    padding: 5px 8px;
+    font-weight: bold;
+    border-bottom: solid 1px {{ profile.text_color }};
+}
+</style>
+
+<ul>
+    {% if entry.title %}
+        <h3>{{ entry.title }}</h3>
     {% end %}
-</section>
+    
+    {% for skill in entry.skills %}
+        {% if skill %}
+            <li>{{ skill }}</li>
+        {% end %}
+    {% end %}
+</ul>

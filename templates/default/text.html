@@ -1,19 +1,12 @@
-<section class="section">
-    <h3>{{ section.title }}</h3>
-    {% for entry in section.entries %}
-        <article>
-            <p>
-                {% if entry.text %}
-                    {% module md(text=entry.text) %}
-                {% end %}
-                {% if entry.bullets %}
-                    <ul>
-                        {% for bullet in entry.bullets %}
-                            <li>{% module md(text=bullet) %}</li>
-                        {% end %}
-                    </ul>
-                {% end %}
-            </p>
-        </article>
+<p>
+    {% if entry.text %}
+        {% module md(text=entry.text) %}
     {% end %}
-</section>
+    {% if entry.bullets %}
+        <ul>
+            {% for bullet in entry.bullets %}
+                <li>{% module md(text=bullet) %}</li>
+            {% end %}
+        </ul>
+    {% end %}
+</p>

@@ -1,0 +1,27 @@
+<style>
+.progress { height: 14px; }
+.progress .background { position: relative; top: 25%; height: 50%; border-radius: 3px; opacity: 20%; background-color: {{ profile.text_color }}; }
+.progress .value { position: relative; top: -50%; }
+.progress .value .filled { display: inline-block; position: relative; top: -3.5px; height: 7px; border-radius: 3px; background-color: {{ profile.accent_color }}; }
+.progress .value .handle { position: relative; left: -7px; height: 14px; width: 14px; border-radius: 50%; background-color: {{ profile.base_color }}; }
+</style>
+
+{% if entry.title %}
+    <h3>
+        {{ text=entry.title }}
+    </h3>
+{% end %}
+{% if entry.subtitle %}
+    <h5>
+        {{ text=entry.subtitle }}
+    </h5>
+{% end %}
+{% if entry.value %}
+    <div class="progress">
+        <div class="background"></div>
+        <div class="value">
+            <div class="filled" style="width: {{ entry.value * 100 }}%;"></div>
+            <div class="handle"></div>
+        </div>
+    </div>
+{% end %}

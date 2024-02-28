@@ -5,7 +5,10 @@ import io
 import itertools
 import os
 import PIL.Image
+import re
 from typing import ClassVar, List
+
+# Common types
 
 
 @dataclass
@@ -47,29 +50,52 @@ class WithDatePeriod:
         return ""
 
 
-@dataclass
-class BaseSection:
+class BaseEntry:
     TYPE: ClassVar[str] = "none"
+
+
+@dataclass
+class Section:
     title: str
     column: int = 0
+    columns_count: int = 1
+    entries: List[BaseEntry]|None = None
 
 
 @dataclass
-class TextEntry:
+class TextEntry(BaseEntry):
+    """
+    A simple text entry with optional bullets.
+
+    Used for summary, about, etc.
+    """
+    TYPE = "text"
     text: str|None = None
     bullets: List[str]|None = None
 
 
 @dataclass
-class TextSection(BaseSection):
-    TYPE = "text"
-    entries: List[TextEntry]|None = None
+class QuoteEntry(BaseEntry):
+    """
+    A quote entry with optional author.
+
+    Used for phylosophy, testimonials, etc.
+    """
+    TYPE = "quote"
+    text: str|None = None
+    author: str|None = None
 
 
 @dataclass
-class JobEntry(WithDatePeriod):
+class ExperienceEntry(WithDatePeriod, BaseEntry):
+    """
+    A single experience entry with optional bullets.
+
+    Used for work experience, education, personal projects, volunteering, etc.
+    """
+    TYPE = "experience"
     title: str|None = None
-    company: str|None = None
+    subtitle: str|None = None
     location: str|None = None
     link: str|None = None
     description: str|None = None
@@ -77,57 +103,95 @@ class JobEntry(WithDatePeriod):
 
 
 @dataclass
-class JobSection(BaseSection):
-    TYPE = "job"
-    entries: List[JobEntry]|None = None
+class SkillsEntry(BaseEntry):
+    """
+    A group of skills with optional title.
+    The skills are arranged on a wrapping line.
 
+    Used for skills, tools, etc.
 
-@dataclass
-class EducationEntry(WithDatePeriod):
-    field: str|None = None
-    school: str|None = None
-    location: str|None = None
-    grade: str|None = None
-    bullets: List[str]|None = None
-
-
-@dataclass
-class EducationSection(BaseSection):
-    TYPE = "education"
-    entries: List[EducationEntry]|None = None
-
-
-@dataclass
-class SkillEntry:
-    name: str|None = None
-    # rating: float|None = None
-    # description: str|None = None
-
-
-@dataclass
-class SkillsGroup:
-    title: str|None = None
-    entries: List[SkillEntry]|None = None
-
-
-@dataclass
-class SkillsSection(BaseSection):
+    For option with sliders use SlidersEntry.
+    """
     TYPE = "skills"
-    groups: List[str]|None = None
-
-
-@dataclass
-class ProjectEntry(WithDatePeriod):
     title: str|None = None
-    link: str|None = None
-    description: str|None = None
-    bullets: List[str]|None = None
+    skills: List[str]|None = None
 
 
 @dataclass
-class ProjectSection(BaseSection):
-    TYPE = "project"
-    entries: List[ProjectEntry]|None = None
+class SliderEntry(BaseEntry):
+    """
+    An entry with a slider and an optional title.
+
+    Used for skills, languages, etc.
+    """
+    TYPE = "slider"
+    title: str|None = None
+    subtitle: str|None = None
+    value: float|None = None
+
+
+@dataclass
+class IconAndTextEntry(BaseEntry):
+    """
+    General purpose entry with an icon, title and description (all optional).
+
+    Used for references, achievements, awards, certificates, courses,
+    strengths, social media profiles, etc.
+    """
+    TYPE = "icon_and_text"
+    title: str|None = None
+    icon: str|None = None
+    description: str|None = None
+
+
+@dataclass
+class PieChartValue:
+    name: str|None = None
+    weight: float|None = None
+
+
+@dataclass
+class PieChartEntry(BaseEntry):
+    """
+    An entry with a pie chart and an optional title.
+    Used for languages, frameworks, etc.
+    """
+    TYPE = "pie_chart"
+    values: List[PieChartValue]|None = None
+
+    @property
+    def total_weight(self):
+        return sum(v.weight for v in self.values if v.weight is not None)
+    
+    def normalized_weight(self, idx: int):
+        return self.values[idx].weight / self.total_weight if self.total_weight else 0
+    
+    RGB_PATTERN = r"rgb\((\d+), (\d+), (\d+)\)"
+    def lerp_color(self, a: str, b: str, idx: int):
+        a_match = re.match(self.RGB_PATTERN, a)
+        b_match = re.match(self.RGB_PATTERN, b)
+        w = self.values[idx].weight / max(v.weight for v in self.values if v.weight is not None)
+        if a_match and b_match:
+            ar, ag, ab = map(int, a_match.groups())
+            br, bg, bb = map(int, b_match.groups())
+            r = int(ar + (br - ar) * w)
+            g = int(ag + (bg - ag) * w)
+            b = int(ab + (bb - ab) * w)
+            return f"rgb({r}, {g}, {b})"
+        else:
+            return a
+        
+    PI = 3.14159265358979323846
+    def angles(self, idx: int):
+        weights = [self.normalized_weight(i) for i in range(idx + 1)]
+        weights_before = sum(weights[:idx])
+        weights_after = sum(weights)
+        angle_start = self.PI * 2 * weights_before
+        angle_end = self.PI * 2 * weights_after
+        return angle_start, angle_end
+
+
+# Profile
 
 
 @dataclass
@@ -148,7 +212,7 @@ class Profile:
     location: str|None = None
     link: str|None = None
     photo_file: str|None = None
-    sections: List[BaseSection]|None = None
+    sections: List[Section]|None = None
 
     @property
     def first_name(self):
@@ -183,4 +247,5 @@ class Profile:
     
     @property
     def sections_by_column(self):
-        return itertools.groupby(self.sections, key=lambda s: s.column)
+        by_column = sorted(self.sections, key=lambda s: s.column)
+        return itertools.groupby(by_column, key=lambda s: s.column)

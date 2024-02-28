@@ -1,0 +1,15 @@
+<style>
+.quote { color: {{ profile.accent_color }}; }
+.quote .author { display: flex; justify-content: right; color: {{ profile.text_color }}; }
+</style>
+
+<p>
+    {% if entry.text %}
+        {% module md(text=entry.text) %}
+    {% end %}
+    {% if entry.author %}
+        <span class="author">
+            {{ entry.author }}
+        </span>
+    {% end %}
+</p>

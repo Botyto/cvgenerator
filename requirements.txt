@@ -3,6 +3,7 @@ selenium
 markdown
 watchdog
 pillow
+openai-functions
 
 pypdf
 nltk

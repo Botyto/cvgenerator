@@ -5,7 +5,9 @@ import os
 import selenium
 import selenium.webdriver
 from selenium.webdriver.common.print_page_options import PrintOptions
+import sys
 import time
+import traceback
 from typing import Dict, Tuple
 import watchdog.observers
 import watchdog.events
@@ -62,6 +64,18 @@ class Generator:
         try:
             html = template.generate(template_path, profile_data)
         except Exception as e:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            tb = traceback.extract_tb(exc_traceback)[-1]
+            filename, line_number, function_name, text = tb
+            if ".generated.py" in filename:
+                comment_idx = text.rfind("  # ")
+                if comment_idx >= 0:
+                    template_location = text[comment_idx + 4:]
+                    text = text[:comment_idx]
+                    print(f"[{profile}] Failed to generate HTML @ {template_location}")
+                    print(f"    {text.strip()}")
+                    print(f"    {e}")
+                    return
             print(f"[{profile}] Failed to generate HTML:", e)
             return
         os.makedirs("output", exist_ok=True)

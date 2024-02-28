@@ -163,3 +163,4 @@ input/*
 output/*
 venv/*
 known_words.txt
+openai_api_key.txt

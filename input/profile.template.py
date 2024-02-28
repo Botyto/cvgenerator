@@ -10,20 +10,20 @@ PROFILE = Profile(
     link="https://www.linkedin.com/in/john-doe",
     photo_file="photo.png",
     sections=[
-        TextSection("Summary",
+        Section("Summary",
             column=0,
             entries=[
                 TextEntry("A summary of me"),
             ],
         ),
-        JobSection("Experience",
+        Section("Experience",
             column=0,
             entries=[
-                JobEntry(
+                ExperienceEntry(
                     start_date=Date(2010, 5),
                     end_date=Date(2020, 8),
                     title="Professional Title",
-                    company="Company Name",
+                    subtitle="Company Name",
                     location="City, Country",
                     link="https://www.company.site/",
                     description="Your job description",
@@ -34,24 +34,24 @@ PROFILE = Profile(
                 ),
             ],
         ),
-        SkillsSection("Expertise",
+        Section("Expertise",
             column=1,
             groups=[
-                SkillsGroup(entries=[
-                    SkillEntry(name="Math"),
-                    SkillEntry(name="Mentorship"),
-                    SkillEntry(name="Microsoft Office"),
+                SkillsEntry(skills=[
+                    "Math",
+                    "Mentorship",
+                    "Microsoft Office",
                 ]),
             ],
         ),
-        EducationSection("Education",
+        Section("Education",
             column=1,
             entries=[
-                EducationEntry(
+                ExperienceEntry(
                     start_date=Date(2013),
                     end_date=Date(2017),
-                    field="Bachelor of Science in Computer Science",
-                    school="University of Example",
+                    title="Bachelor of Science in Computer Science",
+                    subtitle="University of Example",
                     bullets=[
                         "What you learned",
                         "What you achieved",

@@ -1,0 +1,77 @@
+<style>
+header {
+    margin-bottom: 4px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+header h1 {
+    font-family: "Lato", sans-serif;
+    text-transform: uppercase;
+    font-size: 38px;
+    line-height: 1;
+    margin: 0;
+    padding: 0 0 2px;
+    color: {{ profile.base_color }};
+}
+header h2 {
+    font-family: "Lato", sans-serif;
+    margin: 0;
+    font-size: 19px;
+    line-height: 23px;
+    padding: 0 0 2px;
+    color: {{ profile.accent_color }};
+}
+.intro {
+    display: flex;
+    flex-direction: column;
+    padding-right: 12px;
+}
+.details {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 12px;
+    line-height: 16px;
+    row-gap: 2px;
+}
+.details .with-icon { min-width: 50%; white-space: nowrap; }
+.details .with-icon i { margin-right: 4px; }
+.details .with-icon span { font-weight: bold; padding-right: 14px; }
+header img { width: 135px; height: 135px; border-radius: 50%; }
+</style>
+
+<header>
+    <div class="intro">
+        <h1>{{ profile.name }}</h1>
+        <h2>{{ profile.title }}</h2>
+        <section class="details">
+            {% if profile.phone %}
+                <span class="with-icon">
+                    <i class="icon-phone"></i>
+                    <span>{% module md(text=profile.phone) %}</span>
+                </span>
+            {% end %}
+            {% if profile.email %}
+                <span class="with-icon">
+                    <i class="icon-at"></i>
+                    <span>{% module md(text=profile.email) %}</span>
+                </span>
+            {% end %}
+            {% if profile.link %}
+                <span class="with-icon">
+                    <i class="icon-link"></i>
+                    <span>{% module md(text=profile.link) %}</span>
+                </span>
+            {% end %}
+            {% if profile.location %}
+                <span class="with-icon">
+                    <i class="icon-location"></i>
+                    <span>{% module md(text=profile.location) %}</span>
+                </span>
+            {% end %}
+        </section>
+    </div>
+    {% if profile.has_photo %}
+        <img src="{{ profile.photo_base64 }}" alt="{{ profile.name }}" class="photo">
+    {% end %}
+</header>
